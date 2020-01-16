@@ -1,0 +1,45 @@
+<template>
+    <text class="cm-icon" style="color: {{ color }}">
+        <span style="font-size: {{ size }}px">{{ unescapeFontIconCode(icons[icon]) }}</span>
+    </text>
+</template>
+
+<script>
+import icons from './icons';
+
+export default {
+    props: {
+        icon: {
+            type: String,
+            default: ''
+        },
+        color: {
+            type: String,
+            default: ''
+        },
+        size: {
+            type: Number,
+            default: 20
+        }
+    },
+    data: {
+        icons
+    },
+    unescapeFontIconCode(iconCode = '') {
+        return unescape(iconCode.replace(/&#x/g, '%u').replace(/;/g, ''));
+    }
+}
+</script>
+
+<style lang="less" scoped>
+@font-face {
+    font-family: iconfont;
+    src: url("iconfont.ttf");
+}
+.cm-icon {
+    span {
+        font-family: iconfont;
+        font-style: normal;
+    }
+}
+</style>
