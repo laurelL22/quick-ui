@@ -1,0 +1,82 @@
+<template>
+    <div class="cm-image-box">
+        <image
+            src="{{ imgSrc }}"
+            alt="{{ alt }}"
+            class="{{ round && 'round'}}"
+            style="{{ style }}"
+            onclick="onClick"
+            oncomplete="onComplete"
+            onerror="onImageError"
+        ></image>
+    </div>
+</template>
+
+<script>
+const DEFAULT_IMG = 'https://doc.quickapp.cn/widgets/background-image1.png';
+
+export default {
+    props: {
+        src: String,
+        round: Boolean,
+        width: Number,
+        height: Number,
+        fit: String,
+        alt: String, // 加载时显示的占位图；只支持本地图片资源(!!1060+新特性)
+        placeholer: { // 加载失败占位图
+            type: String,
+            default: DEFAULT_IMG
+        }
+    },
+    data: {
+        imgSrc: ''
+    },
+    computed: {
+        style() {
+            const style = {};
+
+            if (this.isDef(this.width)) {
+                style.width = `${this.width}px`;
+            }
+            if (this.isDef(this.height)) {
+                style.height = `${this.height}px`;
+            }
+            if (this.fit) {
+                style.objectFit = this.fit;
+            }
+
+            return style;
+        }
+    },
+    isDef(value) {
+        return value !== undefined && value !== null;
+    },
+    onComplete(e) {
+        this.$emit('load', e);
+    },
+    onClick(e) {
+        this.$emit('click', e);
+    },
+    onImageError(e) {
+        this.imgSrc = this.placeholer;
+        this.$emit('error', e);
+    },
+
+    onInit() {
+        this.imgSrc = this.src;
+    }
+}
+</script>
+
+<style lang="less" scoped>
+.cm-image-box {
+    width: 100%;
+    image {
+        width: 100%;
+        object-fit: cover;
+    }
+    .round {
+        border-radius: 1000px;
+    }
+}
+</style>
