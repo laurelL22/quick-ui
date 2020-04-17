@@ -18,7 +18,11 @@ const NATIVE = {
     // ... 需要的接口自行添加
 }
 
-
+/**
+ * promise 化快应用
+ * @param {*} actions 
+ * @param {*} option 
+ */
 function nativeApi(actions, option) {
     const [action, name] = actions.split('.');
   

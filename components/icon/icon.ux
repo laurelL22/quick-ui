@@ -1,7 +1,8 @@
 <template>
-    <text class="cm-icon" style="color: {{ color }}">
-        <span style="font-size: {{ size }}px">{{ unescapeFontIconCode(icons[icon]) }}</span>
-    </text>
+    <label
+        class="cm-icon"
+        style="{{ iconStyle }}"
+    >{{ unescapeFontIconCode(icon) }}</label>
 </template>
 
 <script>
@@ -23,10 +24,13 @@ export default {
         }
     },
     data: {
-        icons
+        iconStyle: {
+            'color': this.color,
+            'font-size': `${this.size}px`
+        }
     },
-    unescapeFontIconCode(iconCode = '') {
-        return unescape(iconCode.replace(/&#x/g, '%u').replace(/;/g, ''));
+    unescapeFontIconCode(icon) {
+      return unescape(icons[icon].replace(/&#x/g, "%u").replace(/;/g, ""));
     }
 }
 </script>
@@ -34,12 +38,11 @@ export default {
 <style lang="less" scoped>
 @font-face {
     font-family: iconfont;
-    src: url("iconfont.ttf");
+    /* src: url("iconfont.ttf"); */
+    src: url('http://at.alicdn.com/t/font_1437982_s0tcqn9gge.ttf');
 }
 .cm-icon {
-    span {
-        font-family: iconfont;
-        font-style: normal;
-    }
+    font-family: iconfont;
+    font-style: normal;
 }
 </style>

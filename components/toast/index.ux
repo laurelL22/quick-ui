@@ -1,0 +1,142 @@
+<import name="cm-icon" src="../icon/index.ux"></import>
+
+<template>
+    <div class="cm-toast">
+      <div class="wrap" if="{{ visible }}">
+        <div class="toast-mask" if="{{ visible && mask }}" @click="hideToast"></div>
+        <div class="toast" if="{{ visible }}">
+          <block class="toast-type">
+            <cm-icon if="{{ icon }}" icon="{{ icon }}" color="#fff" size="80"></cm-icon>
+            <image
+              class="toast-image"
+              src="{{ image }}"
+              if="{{ image }}"
+            ></image>
+            <progress
+              class="loading"
+              type="circular"
+              if="{{ type === 'loading' }}"
+            ></progress>
+          </block>
+
+          <text class="apex-toast-content" if="{{ content }}">{{ content }}</text>
+        </div>
+      </div>
+    </div>
+</template>
+
+<script>
+  const defaultData = {
+    visibel: false,
+    content: '',
+    icon: '',
+    image: '',
+    duration: 2,
+    mask: true,
+    type: 'default' // // default || loading || ...
+  }
+
+  let timer = null;
+
+  export default {
+    data() {
+      return {
+        ...defaultData
+      }
+    },
+
+    showToast(options) {
+      const { type = 'default', duration = 2 } = options;
+
+      Object.assign(this._data, {
+        ...options,
+        type,
+        duration,
+        visible: true
+      });
+
+      const d = this._data.duration * 1000;
+
+      if (timer) clearTimeout(timer);
+      if (d !== 0) {
+        timer = setTimeout(() => {
+          this.hideToast();
+          timer = null;
+        }, d)
+      }
+    },
+
+    hideToast() {
+      Object.assign(this._data, {
+        ...defaultData
+      });
+    }
+
+  }
+</script>
+
+<style lang="less">
+@ratio: 750/750; // your designWidth / 750
+
+.wrap {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .toast-mask {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+}
+
+.toast {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 10px * @ratio 18px * @ratio;
+  border-radius: 8px * @ratio;
+
+  text {
+    color: #fff;
+    text-align: center;
+    font-size: @size-font-small;
+    lines: 1;
+    padding: 0 20px * @ratio;
+    text-overflow: ellipsis;
+  }
+
+  .loading {
+    color: #ffffff;
+    height: 60px * @ratio;
+    width: 60px * @ratio;
+  }
+
+  .custom-icon {
+    margin: 15px * @ratio;
+  }
+
+  &-type {
+    justify-content: center;
+    margin: 15px * @ratio;
+  }
+
+  &-icon {
+    font-size: 38px * @ratio;
+    margin-bottom: 6px * @ratio;
+  }
+
+  &-image {
+    width: 100px * @ratio;
+    height: 100px * @ratio;
+    object-fit: cover;
+    margin: 15px * @ratio;
+  }
+}
+</style>
